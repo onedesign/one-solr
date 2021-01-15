@@ -1,0 +1,26 @@
+{# @var craft \craft\web\twig\variables\CraftVariable #}
+{#
+/**
+ * One Solr plugin for Craft CMS 3.x
+ *
+ * One Solr Settings.twig
+ *
+ * @author    Michael Ramuta
+ * @copyright Copyright (c) 2021 Michael Ramuta
+ * @link      https://github.com/onedesign
+ * @package   OneSolr
+ * @since     1.0.0
+ */
+#}
+
+{% import "_includes/forms" as forms %}
+
+{% do view.registerAssetBundle("onedesign\\onesolr\\assetbundles\\onesolr\\OneSolrAsset") %}
+
+{{ forms.textField({
+    label: 'Some Field',
+    instructions: 'Enter some setting here.',
+    id: 'someAttribute',
+    name: 'someAttribute',
+    value: settings['someAttribute']})
+}}

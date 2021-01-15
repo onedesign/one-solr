@@ -1,0 +1,52 @@
+{
+    "name": "onedesign/one-solr",
+    "description": "Craft Solr Integration",
+    "type": "craft-plugin",
+    "version": "1.0.0",
+    "keywords": [
+        "craft",
+        "cms",
+        "craftcms",
+        "craft-plugin",
+        "one solr"
+    ],
+    "support": {
+        "docs": "https://github.com/onedesign/one-solr/blob/master/README.md",
+        "issues": "https://github.com/onedesign/one-solr/issues"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Michael Ramuta",
+            "homepage": "https://github.com/onedesign"
+        }
+    ],
+    "require": {
+        "craftcms/cms": "^3.0.0",
+        "solarium/solarium": "^6.0"
+    },
+    "require-dev": {
+      "craftcms/cms": "^3.2.0",
+      "codeception/codeception": "^3.0",
+      "vlucas/phpdotenv": "^3.0",
+      "symfony/event-dispatcher": "^4.4.9"
+    },
+    "autoload": {
+        "psr-4": {
+          "onedesign\\onesolr\\": "src/"
+        }
+    },
+    "extra": {
+        "name": "One Solr",
+        "handle": "one-solr",
+        "developer": "Michael Ramuta",
+        "developerUrl": "https://github.com/onedesign",
+        "documentationUrl": "https://github.com/onedesign/one-solr/blob/master/README.md",
+        "changelogUrl": "https://raw.githubusercontent.com/onedesign/one-solr/master/CHANGELOG.md",
+        "components": {
+            "solarium": "onedesign\\onesolr\\services\\Solarium",
+            "solr": "onedesign\\onesolr\\services\\Solr"
+        },
+        "class": "onedesign\\onesolr\\OneSolr"
+    }
+}
