@@ -1,2 +1,4 @@
 vendor
 .env
+tests/_craft/config/project
+tests/_craft/storage
