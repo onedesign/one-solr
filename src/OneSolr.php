@@ -72,7 +72,7 @@ class OneSolr extends Plugin
      *
      * @var bool
      */
-    public $hasCpSettings = true;
+    public $hasCpSettings = false;
 
     /**
      * Set to `true` if the plugin should have its own section (main nav item) in the control panel.
@@ -143,6 +143,10 @@ class OneSolr extends Plugin
             }
         );
 
+        $this->setComponents([
+            'mappingPath' => \onedesign\onesolr\services\MappingPath::class,
+        ]);
+
 /**
  * Logging in Craft involves using one of the following methods:
  *
@@ -185,18 +189,29 @@ class OneSolr extends Plugin
     }
 
     /**
-     * Returns the rendered settings HTML, which will be inserted into the content
-     * block on the settings page.
-     *
-     * @return string The rendered settings HTML
+     * @inheritdoc
      */
-    protected function settingsHtml(): string
+    public function getCpNavItem(): array
     {
-        return Craft::$app->view->renderTemplate(
-            'one-solr/settings',
-            [
-                'settings' => $this->getSettings()
-            ]
-        );
+        $ret = parent::getCpNavItem();
+
+        $ret['label'] = 'One Solr';
+
+        $ret['subnav']['index'] = [
+            'label' => 'Index',
+            'url' => 'one-solr'
+        ];
+
+        $ret['subnav']['settings'] = [
+            'label' => 'Settings',
+            'url' => 'one-solr/settings'
+        ];
+
+        $ret['subnav']['status'] = [
+            'label' => 'Status',
+            'url' => 'one-solr/status'
+        ];
+
+        return $ret;
     }
 }

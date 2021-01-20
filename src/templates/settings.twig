@@ -13,14 +13,41 @@
  */
 #}
 
+{% extends "_layouts/cp" %}
 {% import "_includes/forms" as forms %}
 
 {% do view.registerAssetBundle("onedesign\\onesolr\\assetbundles\\onesolr\\OneSolrAsset") %}
+{% do view.registerAssetBundle("onedesign\\onesolr\\assetbundles\\indexcpsection\\IndexCPSectionAsset") %}
 
-{{ forms.textField({
-    label: 'Some Field',
-    instructions: 'Enter some setting here.',
-    id: 'someAttribute',
-    name: 'someAttribute',
-    value: settings['someAttribute']})
-}}
+{# Link for the ? icon at the bottom of the page #}
+{% set docsUrl = "https://github.com/onedesign/one-solr/blob/master/README.md" %}
+
+{# The title of this CP section #}
+{% set title = "OneSolr Settings" %}
+{% set selectedSubnavItem = 'settings' %}
+
+{# The URL to this plugin's base CP section #}
+{% set pluginCpUrl = url('one-solr') %}
+
+{# Get a URL to an image in our AssetBundle #}
+{% set iconUrl = view.getAssetManager().getPublishedUrl('@onedesign/onesolr/assetbundles/indexcpsection/dist', true) ~ '/img/Index-icon.svg' %}
+
+{% set tabs = {
+    index: {
+        label: 'Index',
+        url: '/admin/one-solr',
+    },
+    settings: {
+        label: 'Settings',
+        url: 'settings',
+    },
+    status: {
+        label: 'Status',
+        url: 'status',
+    },
+} %}
+{% set selectedTab = 'settings' %}
+
+{# The content of the CP Section#}
+{% set content %}
+{% endset %}

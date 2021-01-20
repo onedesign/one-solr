@@ -3,7 +3,7 @@
 /**
  * One Solr plugin for Craft CMS 3.x
  *
- * One Solr index.twig
+ * One Solr Status.twig
  *
  * @author    Michael Ramuta
  * @copyright Copyright (c) 2021 Michael Ramuta
@@ -23,7 +23,8 @@
 {% set docsUrl = "https://github.com/onedesign/one-solr/blob/master/README.md" %}
 
 {# The title of this CP section #}
-{% set title = "One Solr" %}
+{% set title = "OneSolr Status" %}
+{% set selectedSubnavItem = 'status' %}
 
 {# The URL to this plugin's base CP section #}
 {% set pluginCpUrl = url('one-solr') %}
@@ -34,18 +35,18 @@
 {% set tabs = {
     index: {
         label: 'Index',
-        url: 'one-solr',
+        url: '/admin/one-solr',
     },
     settings: {
         label: 'Settings',
-        url: 'one-solr/settings',
+        url: 'settings',
     },
     status: {
         label: 'Status',
-        url: 'one-solr/status',
+        url: 'status',
     },
 } %}
-{% set selectedTab = 'index' %}
+{% set selectedTab = 'status' %}
 
 {# The content of the CP Section#}
 {% set content %}
