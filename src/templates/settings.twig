@@ -47,7 +47,37 @@
     },
 } %}
 {% set selectedTab = 'settings' %}
+{% set fullPageForm = true %}
+
 
 {# The content of the CP Section#}
 {% set content %}
+    {{ actionInput('one-solr/default/save-settings') }}
+    {{ redirectInput('one-solr/settings') }}
+    <table class="data fullwidth">
+        <thead>
+        <tr>
+            <th>Section</th>
+            <th>Index Path</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for section in craft.sections.allSections() %}
+            <tr>
+                <td>{{ section.name }}</td>
+                <td>
+                    <div class="input">
+                        <input type="hidden" name="mappingPaths[{{ section.id }}][sectionId]" value="{{ section.id }}">
+                        <select name="mappingPaths[{{ section.id }}][mapping]">
+                            <option value="">Select Mapping</option>
+                            {% for mapping in craft.oneSolr.getMappingTemplates() %}
+                                <option value="{{ mapping }}"{% if craft.oneSolr.mappingsForSection(section) == mapping %} selected{% endif %}>{{ mapping }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 {% endset %}

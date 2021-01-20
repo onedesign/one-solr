@@ -46,34 +46,27 @@ class DefaultController extends Controller
      *         The actions must be in 'kebab-case'
      * @access protected
      */
-    protected $allowAnonymous = ['index', 'do-something'];
+    protected $allowAnonymous = [];
 
     // Public Methods
     // =========================================================================
 
     /**
-     * Handle a request going to our plugin's index action URL,
-     * e.g.: actions/one-solr/default
+     * Handles saving mapping path settings
+     * e.g.: actions/one-solr/save-settings
      *
      * @return mixed
      */
-    public function actionIndex()
+    public function actionSaveSettings()
     {
-        $result = 'Welcome to the DefaultController actionIndex() method';
+        $mappingPathData = Craft::$app->request->getParam('mappingPaths');
+        if (OneSolr::getInstance()->mappingPath->saveMappingPaths($mappingPathData)) {
+            $this->setSuccessFlash('Mapping paths saved.');
+        } else {
+            Craft::$app->session->setFlash('notice', 'Couldn\'t save mapping paths');
+            $this->setFailFlash('Couldn\'t save mapping paths.');
+        }
 
-        return $result;
-    }
-
-    /**
-     * Handle a request going to our plugin's actionDoSomething URL,
-     * e.g.: actions/one-solr/default/do-something
-     *
-     * @return mixed
-     */
-    public function actionDoSomething()
-    {
-        $result = 'Welcome to the DefaultController actionDoSomething() method';
-
-        return $result;
+        return $this->redirectToPostedUrl();
     }
 }

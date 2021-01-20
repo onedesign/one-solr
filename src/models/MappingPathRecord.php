@@ -13,7 +13,7 @@ namespace onedesign\onesolr\models;
 use onedesign\onesolr\OneSolr;
 
 use Craft;
-use craft\base\Model;
+use craft\db\ActiveRecord;
 
 /**
  * MappingPath Model
@@ -27,7 +27,7 @@ use craft\base\Model;
  * @package   OneSolr
  * @since     1.0.0
  */
-class MappingPath extends Model
+class MappingPathRecord extends ActiveRecord
 {
 
     // Public Methods
@@ -55,8 +55,7 @@ class MappingPath extends Model
     {
         return [
             ['sectionId', 'required'],
-            ['mappingPath', 'required'],
-            ['locale', 'required']
+            ['mappingPath', 'required']
         ];
     }
 }

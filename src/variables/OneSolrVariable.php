@@ -10,6 +10,7 @@
 
 namespace onedesign\onesolr\variables;
 
+use craft\models\Section;
 use onedesign\onesolr\OneSolr;
 
 use Craft;
@@ -32,25 +33,21 @@ class OneSolrVariable
     // =========================================================================
 
     /**
-     * Whatever you want to output to a Twig template can go into a Variable method.
-     * You can have as many variable functions as you want.  From any Twig template,
-     * call it like this:
+     * Gets an array of mapping templates
      *
-     *     {{ craft.oneSolr.exampleVariable }}
-     *
-     * Or, if your variable requires parameters from Twig:
-     *
-     *     {{ craft.oneSolr.exampleVariable(twigValue) }}
-     *
-     * @param null $optional
-     * @return string
+     * @return Array
      */
-    public function test()
-    {
-        return OneSolr::getInstance()->solr->getPing();
-    }
-
     public function getMappingTemplates() {
         return OneSolr::getInstance()->mappingPath->getMappingTemplates();
+    }
+
+    /**
+     * Gets mapping for a section id
+     *
+     * @param Section $section
+     * @return String
+     */
+    public function mappingsForSection(Section $section) {
+        return OneSolr::getInstance()->mappingPath->getMappingBySectionId($section->id);
     }
 }

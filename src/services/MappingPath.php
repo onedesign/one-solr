@@ -14,6 +14,8 @@ use onedesign\onesolr\OneSolr;
 
 use Craft;
 use craft\base\Component;
+use onedesign\onesolr\models\MappingPathRecord;
+use phpDocumentor\Reflection\Types\Boolean;
 
 /**
  * MappingPath Service
@@ -33,6 +35,11 @@ class MappingPath extends Component
     // Public Methods
     // =========================================================================
 
+    /**
+     * Gets list of mapping templates in onesolr templates directory
+     *
+     * @return Array
+     */
     public function getMappingTemplates() {
         $path = CRAFT_BASE_PATH . '/templates/onesolr';
         $files = scandir($path);
@@ -46,5 +53,83 @@ class MappingPath extends Component
         }
 
         return $files;
+    }
+
+    /**
+     * Gets list of mapping templates in onesolr templates directory
+     *
+     * @param Int $sectionId
+     * @return String
+     */
+    public function getMappingBySectionId(Int $sectionId)
+    {
+        $mappingPath = MappingPathRecord::find()->where(['sectionId' => $sectionId])->one();
+        if (!$mappingPath) {
+            return false;
+        }
+        return $mappingPath->mappingPath;
+    }
+
+    /**
+     * Saves an array of mapping path records
+     *
+     * @param Array $mappingPathData
+     * @return Boolean
+     */
+    public function saveMappingPaths(Array $mappingPathData)
+    {
+        foreach ($mappingPathData as $mappingPath) {
+            $mappingPathRecord = new MappingPathRecord();
+            $mappingPathRecord->sectionId = $mappingPath['sectionId'];
+            $mappingPathRecord->mappingPath = $mappingPath['mapping'];
+            //todo: actually use locales
+            $mappingPathRecord->locale = 'en';
+            if (!$this->saveMappingBySectionId($mappingPathRecord)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Saves a mapping path by sectionId
+     *
+     * @param MappingPathRecord $mappingPathRecord
+     * @return Boolean
+     */
+    public function saveMappingBySectionId(MappingPathRecord $mappingPathRecord) {
+        $existingRecord = MappingPathRecord::find()->where(['sectionId' => $mappingPathRecord->sectionId])->one();
+
+        // No mapping path found for this section, create a new one.
+        if (!$existingRecord)
+        {
+            // But only when the mapping path is not empty.
+            if (!empty($mappingPathRecord->mappingPath))
+            {
+                if (!$mappingPathRecord->validate()) {
+                    return false;
+                }
+                $mappingPathRecord->save();
+            }
+        }
+        // Mapping path found for this section.
+        else
+        {
+            // Delete it if value is empty.
+            if (empty($mappingPathRecord->mappingPath))
+            {
+                $existingRecord->delete();
+            }
+            // Else update the record with a new mapping path.
+            else
+            {
+                $existingRecord->mappingPath = $mappingPathRecord->mappingPath;
+                if (!$existingRecord->validate()) {
+                    return false;
+                }
+                $existingRecord->save();
+            }
+        }
+        return true;
     }
 }
