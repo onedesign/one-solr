@@ -29,18 +29,17 @@ use craft\base\Model;
  */
 class MappingPath extends Model
 {
-    // Public Properties
-    // =========================================================================
-
-    /**
-     * Some model attribute
-     *
-     * @var string
-     */
-    public $someAttribute = 'Some Default';
 
     // Public Methods
     // =========================================================================
+
+    /**
+     * @return string the name of the table associated with this ActiveRecord class.
+     */
+    public static function tableName()
+    {
+        return '{{%onesolr_mappingpaths}}';
+    }
 
     /**
      * Returns the validation rules for attributes.
@@ -55,8 +54,9 @@ class MappingPath extends Model
     public function rules()
     {
         return [
-            ['someAttribute', 'string'],
-            ['someAttribute', 'default', 'value' => 'Some Default'],
+            ['sectionId', 'required'],
+            ['mappingPath', 'required'],
+            ['locale', 'required']
         ];
     }
 }

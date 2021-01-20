@@ -49,4 +49,8 @@ class OneSolrVariable
     {
         return OneSolr::getInstance()->solr->getPing();
     }
+
+    public function getMappingTemplates() {
+        return OneSolr::getInstance()->mappingPath->getMappingTemplates();
+    }
 }
