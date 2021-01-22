@@ -64,25 +64,32 @@
     <table id="mapping-paths" class="data fullwidth collapsible">
         <thead>
         <tr>
-            <th scope="col">Mapping</th>
+        {# Note: I changed mapping to section because there could be dupes #}
+            <th scope="col">Section</th>
             <th scope="col">Limit</th>
             <th scope="col">Offset</th>
             <th scope="col">Id</th>
+            <td></td>
             <td></td>
         </tr>
         </thead>
         <tbody>
             {% for mapping in craft.oneSolr.mappings %}
+                {% set section = craft.sections.getSectionById(mapping.sectionId) %}
                 <tr>
                     <form method="post" class="centered" accept-charset="UTF-8">
-                        <input type="hidden" name="action" value="dsSolr/cp/renderMappingPreview">
+                        {{ actionInput('one-solr/default/render-mapping-preview') }}
+                        {{ csrfInput() }}
                         <input type="hidden" name="mapping" value="{{ mapping.mappingPath }}">
-                        <th>{{ mapping.mappingPath }}</th>
+                        <input type="hidden" name="sectionId" value="{{ mapping.sectionId }}">
+                        <th>{{ section.name }}</th>
                         <td><input type="text" class="text fullwidth" name="limit" value="10"></td>
                         <td><input type="text" class="text fullwidth" name="offset" value="0"></td>
                         <td><input type="text" class="text fullwidth" name="id" value=""></td>
-                        <td width="260">
+                        <td>
                             <input class="btn submit" name="rendered_preview" type="submit" value="Render neat json">
+                        </td>
+                        <td>
                             <input class="btn submit" name="real_preview" type="submit" value="Render raw json">
                         </td>
                     </form>

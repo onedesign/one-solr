@@ -69,4 +69,17 @@ class DefaultController extends Controller
 
         return $this->redirectToPostedUrl();
     }
+
+    /**
+     * Renders mapping preview
+     * e.g.: actions/one-solr/render-mapping-preview
+     *
+     * @return mixed
+     */
+    public function actionRenderMappingPreview()
+    {
+        $params = Craft::$app->getRequest()->post();
+        // todo: use correct template for base... I dont think if this can work
+        return $this->renderTemplate( 'one-solr/mapping/' . $params['mapping'], $params);
+    }
 }
