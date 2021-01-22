@@ -50,4 +50,31 @@ class OneSolrVariable
     public function mappingsForSection(Section $section) {
         return OneSolr::getInstance()->mappingPath->getMappingBySectionId($section->id);
     }
+
+    /**
+     * Gets the ping status
+     *
+     * @return String
+     */
+    public function pingStatus() {
+        return OneSolr::getInstance()->solr->getPing();
+    }
+
+    /**
+     * Gets the step size
+     *
+     * @return Int
+     */
+    public function stepSize() {
+        return OneSolr::getInstance()->settings->stepSize;;
+    }
+
+    /**
+     * Gets all mappings
+     *
+     * @return Array
+     */
+    public function getMappings() {
+        return OneSolr::getInstance()->mappingPath->getMappings();
+    }
 }

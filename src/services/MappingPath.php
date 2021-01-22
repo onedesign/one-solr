@@ -9,7 +9,6 @@
  */
 
 namespace onedesign\onesolr\services;
-
 use onedesign\onesolr\OneSolr;
 
 use Craft;
@@ -131,5 +130,15 @@ class MappingPath extends Component
             }
         }
         return true;
+    }
+
+    /**
+     * Gets all mappings
+     *
+     * @return Array
+     */
+    public function getMappings()
+    {
+        return MappingPathRecord::find()->all();
     }
 }

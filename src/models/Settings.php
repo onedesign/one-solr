@@ -32,6 +32,7 @@ class Settings extends Model
     // Public Properties
     // =========================================================================
     public $credentials = [];
+    public $stepSize = 5;
 
     // Public Methods
     // =========================================================================

@@ -17,7 +17,7 @@ use craft\base\Component;
 use Solarium\Client;
 use Solarium\Core\Client\Adapter\Curl;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use Solarium\Exception;
+use Solarium\Exception\HttpException;
 
 /**
  * Solr Service
@@ -70,14 +70,14 @@ class Solr extends Component
     {
         $client = $this->getSOLRClient();
         if (!$client) {
-            return Craft::t('No SOLR Client available, check credentials');
+            return 'No SOLR Client available, check credentials';
         }
-        $ping = $client->createPing();
         try {
+            $ping = $client->createPing();
             $result = $client->ping($ping);
-            return $result->getData();
-        } catch (Exception $e) {
-            return Craft::t('Connection failed') . ' ' . $e;
+            return $result->getData()['status'];
+        } catch (HttpException $e) {
+            return 'Connection failed' . ' ' . $e->getMessage();
         }
     }
 }

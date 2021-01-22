@@ -50,4 +50,44 @@
 
 {# The content of the CP Section#}
 {% set content %}
+    <h2>SOLR Server Connection</h2>
+    <p>Ping: {{ craft.oneSolr.pingStatus }}</p>
+
+    <hr />
+
+    <h2>Indexing step size</h2>
+    <p>Entries indexed per step: {{ craft.oneSolr.stepSize }}</p>
+
+    <hr />
+
+    <h2>Mappings</h2>
+    <table id="mapping-paths" class="data fullwidth collapsible">
+        <thead>
+        <tr>
+            <th scope="col">Mapping</th>
+            <th scope="col">Limit</th>
+            <th scope="col">Offset</th>
+            <th scope="col">Id</th>
+            <td></td>
+        </tr>
+        </thead>
+        <tbody>
+            {% for mapping in craft.oneSolr.mappings %}
+                <tr>
+                    <form method="post" class="centered" accept-charset="UTF-8">
+                        <input type="hidden" name="action" value="dsSolr/cp/renderMappingPreview">
+                        <input type="hidden" name="mapping" value="{{ mapping.mappingPath }}">
+                        <th>{{ mapping.mappingPath }}</th>
+                        <td><input type="text" class="text fullwidth" name="limit" value="10"></td>
+                        <td><input type="text" class="text fullwidth" name="offset" value="0"></td>
+                        <td><input type="text" class="text fullwidth" name="id" value=""></td>
+                        <td width="260">
+                            <input class="btn submit" name="rendered_preview" type="submit" value="Render neat json">
+                            <input class="btn submit" name="real_preview" type="submit" value="Render raw json">
+                        </td>
+                    </form>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 {% endset %}
