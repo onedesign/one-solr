@@ -26,7 +26,6 @@ function PreviewMapping() {
     // ------------------------- //
 
     this.init = function() {
-
         // Select elements
         this.$forms = $('form');
         this.$pathsTable = $('#mapping-paths');
