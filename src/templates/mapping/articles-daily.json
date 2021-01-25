@@ -8,13 +8,13 @@
   "title": {{ entry.title | json_encode() | raw }},
   "url": {{ entry.url | json_encode() | raw }},
   "post_date_dt": "{{ entry.postDate | date('Y-m-d\\TH:i:s\\Z') }}",
-  "content": {% set catText = '' %}
-
-  {{ catText | striptags| json_encode() | raw }},
-  "keywords": {{ catText | striptags| json_encode() | raw }},
+  "content": "content",
+  "keywords": "keyword",
   "tags_ss": [
+  "tag1", "tag2"
 ],
   "categories_ss": [
+  "category1", "category2"
 ]
 
 }{% if not loop.last %},{% endif %}
