@@ -49,4 +49,51 @@
 
 {# The content of the CP Section#}
 {% set content %}
+    <form id="index-form" method="post" class="centered" accept-charset="UTF-8">
+
+        <input type="hidden" name="action" value="dsSolr/cp/runIndex">
+        <input type="hidden" name="redirect" value="dssolr/cp/indexMapping">
+
+        <table id="indexing" class="data fullwidth collapsible">
+            <thead>
+            <tr>
+                <th scope="col">{{ "Section"|t }}</th>
+                <th scope="col">{{ "Index path"|t }}</th>
+                <td class="thin"><a href="#">All</a></td>
+            </tr>
+            </thead>
+            <tbody>
+            {% for mapping in craft.oneSolr.mappings %}
+                {% set section = craft.sections.getSectionById(mapping.sectionId) %}
+                <tr id="mapping-section-{{ mapping.sectionId }}">
+                    <th scope="row" data-title="{{ 'Name'|t }}">{{ section.name }}</th>
+                    <td data-title="Handle"><code>{{ mapping.mappingPath }}</code></td>
+                    <td class="thin">
+                        <input type="checkbox" name="section[{{ mapping.sectionId }}]" value="{{ mapping.mappingPath }}">
+                    </td>
+                </tr>
+                <tr class="progress">
+                    <td colspan="4">
+                        <div></div>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <hr>
+        <p>{{ "Use full index to delete the section data first (just for the checked sections)"|t }}</p>
+        <span><strong>{{ "Full update"|t }}</strong>
+            <input type="checkbox" name="fullUpdate" checked />
+        </span>
+        <hr>
+        <div class="buttons">
+            <input class="btn submit" type="submit" value="{{ 'Run index'|t }}">
+        </div>
+    </form>
 {% endset %}
+
+{% js %}
+    $(document).ready(function () {
+        new IndexMapping().init(5);
+    });
+{% endjs %}

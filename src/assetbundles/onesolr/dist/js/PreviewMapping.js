@@ -128,5 +128,3 @@ function PreviewMapping() {
         });
     }
 }
-
-var pm = new PreviewMapping().init();
