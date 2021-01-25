@@ -26,12 +26,17 @@ function PreviewMapping() {
     // ------------------------- //
 
     this.init = function() {
+
         // Select elements
         this.$forms = $('form');
         this.$pathsTable = $('#mapping-paths');
         this.$submitRenderedPreview = $('input[name=rendered_preview]');
         this.$submitRealPreview = $('input[name=real_preview]');
 
+        // do not add event listeners if pathsTable does not exist
+        if (this.$pathsTable.length === 0) {
+            return;
+        }
         // Set event listeners
         this.$submitRenderedPreview.on('click', $.proxy(this.onRenderedPreview, this));
         this.$submitRealPreview.on('click', $.proxy(this.onRealPreview, this));
