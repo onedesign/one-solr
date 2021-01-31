@@ -47,6 +47,13 @@ class Solarium extends Component
     // Public Methods
     // =========================================================================
 
+    /**
+     * Index a section
+     *
+     * @param array $params
+     * @param json $renderedContent, a rendered json of content to be indexed
+     * @return bool
+     */
     public function runIndexSectionSolr($params, $renderedContent)
     {
         $jsonContent = json_decode($renderedContent);
