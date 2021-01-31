@@ -47,7 +47,7 @@ class DefaultController extends Controller
      *         The actions must be in 'kebab-case'
      * @access protected
      */
-    protected $allowAnonymous = ['run-index'];
+    protected $allowAnonymous = [];
 
     // Public Methods
     // =========================================================================
