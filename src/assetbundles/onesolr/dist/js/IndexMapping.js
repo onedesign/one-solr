@@ -171,6 +171,13 @@ function IndexMapping() {
             }
         }
 
+        // if no sections are selected, return and enable submit button
+        if (expectedSections === 0) {
+            this.postString = null;
+            this.enableSubmitButton();
+            return;
+        }
+
         // Fetch data needed for indexing.
         for (var i in decodedUrl) {
 
