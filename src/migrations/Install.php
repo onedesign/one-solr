@@ -11,7 +11,6 @@ class Install extends Migration
             'id' => $this->primaryKey(),
             'sectionId' => $this->integer()->notNull(),
             'mappingPath' => $this->string()->notNull(),
-            'locale' => $this->string()->notNull(),
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),

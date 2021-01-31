@@ -81,8 +81,6 @@ class MappingPath extends Component
             $mappingPathRecord = new MappingPathRecord();
             $mappingPathRecord->sectionId = $mappingPath['sectionId'];
             $mappingPathRecord->mappingPath = $mappingPath['mapping'];
-            //todo: actually use locales
-            $mappingPathRecord->locale = 'en';
             if (!$this->saveMappingBySectionId($mappingPathRecord)) {
                 return false;
             }
