@@ -42,8 +42,6 @@ function IndexMapping() {
             return;
         }
 
-        console.log('still working');
-
         // Set event listeners
         this.$form.on('submit', $.proxy(this.onSubmit, this));
         $(this).on('indexParamDataComplete', $.proxy(this.onIndexParamDataComplete, this));
@@ -77,7 +75,7 @@ function IndexMapping() {
             this.handleRowStatus(currentProcessingData);
 
             var jqxhr = $.post('', this.postString, $.proxy(function(data) {
-                if (data.status === 1) {
+                if (data.status) {
                     // Raise the passed cycles
                     currentProcessingData.passedCycles++;
                     // Recursion
@@ -137,12 +135,12 @@ function IndexMapping() {
     }
 
     this.animateProgress = function(data) {
-        $progressBar = this.$table.find('tr#mapping-section-' + data.sectionId + '-' + data.locale).next().find('div');
+        $progressBar = this.$table.find('tr#mapping-section-' + data.sectionId).next().find('div');
         $progressBar.animate({width:String(100 * ((data.passedCycles + 1) / data.cycles)) + '%'});
     }
 
     this.setRowToActive = function(data) {
-        $row = this.$table.find('tr#mapping-section-' + data.sectionId + '-' + data.locale);
+        $row = this.$table.find('tr#mapping-section-' + data.sectionId);
         $row.css({'backgroundColor':'rgba(115, 127, 140, 0.05)'});
     }
 
@@ -181,14 +179,12 @@ function IndexMapping() {
                 var section 	= decodedUrl[i].split('=');
                 var disect      = String(section[0].match(letterPattern)).split(',');
                 var sectionId 	= parseInt(disect[1]);
-                var locale  	= String(disect[2]);
-                var url 		= String('/admin/dssolr/total/' + sectionId + '/' + locale);
+                var url 		= String('/admin/one-solr/total/' + sectionId);
 
                 $.get(url, $.proxy(function(data) {
 
                     data.total 	   	  = parseInt(data.total);
                     data.sectionId 	  = parseInt(data.sectionId);
-                    data.locale       = String(data.locale);
                     data.cycles	   	  = Math.ceil(data.total / this.offset);
                     data.passedCycles = 0;
 
@@ -238,8 +234,6 @@ function IndexMapping() {
                 this.postString += '&sectionId=' + data.sectionId;
                 // Mapping path
                 this.postString += '&mappingPath=' + data.mappingPath;
-                // Locale
-                this.postString += '&locale=' + data.locale;
                 // Encode
                 this.postString = encodeURIComponent(this.postString);
                 this.postString = this.replaceAll('%3D', '=', this.postString);

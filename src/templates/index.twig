@@ -50,9 +50,8 @@
 {# The content of the CP Section#}
 {% set content %}
     <form id="index-form" method="post" class="centered" accept-charset="UTF-8">
-
-        <input type="hidden" name="action" value="dsSolr/cp/runIndex">
-        <input type="hidden" name="redirect" value="dssolr/cp/indexMapping">
+        {{ csrfInput() }}
+        {{ actionInput('one-solr/default/run-index') }}
 
         <table id="indexing" class="data fullwidth collapsible">
             <thead>
@@ -93,7 +92,8 @@
 {% endset %}
 
 {% js %}
+
     $(document).ready(function () {
-        new IndexMapping().init(5);
+        new IndexMapping().init("{{ craft.oneSolr.stepSize }}");
     });
 {% endjs %}

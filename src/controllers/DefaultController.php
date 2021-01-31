@@ -14,6 +14,7 @@ use onedesign\onesolr\OneSolr;
 
 use Craft;
 use craft\web\Controller;
+use craft\elements\Entry;
 
 /**
  * Default Controller
@@ -46,7 +47,7 @@ class DefaultController extends Controller
      *         The actions must be in 'kebab-case'
      * @access protected
      */
-    protected $allowAnonymous = [];
+    protected $allowAnonymous = ['run-index'];
 
     // Public Methods
     // =========================================================================
@@ -79,7 +80,41 @@ class DefaultController extends Controller
     public function actionRenderMappingPreview()
     {
         $params = Craft::$app->getRequest()->post();
-        // todo: use correct template for base... I dont think if this can work
-        return $this->renderTemplate( 'one-solr/mapping/' . $params['mapping'], $params);
+        return $this->renderTemplate( 'onesolr/' . $params['mapping'], $params, 'site');
+    }
+
+    /**
+     * Runs index for a section
+     * e.g.: actions/one-solr/run-index
+     *
+     * @return mixed
+     */
+    public function actionRunIndex()
+    {
+        $params = Craft::$app->getRequest()->post();
+        $view = $this->getView();
+        $renderedContent = $view->renderPageTemplate( 'onesolr/' . $params['mappingPath'], $params, 'site');
+        $params['status'] = OneSolr::getInstance()->solarium->runIndexSectionSolr($params, $renderedContent);
+        return $this->asJson($params);
+    }
+
+    /**
+     * Runs index for a section
+     * e.g.: actions/one-solr/total-entries
+     *
+     * @return mixed
+     */
+    public function actionTotalEntries($sectionId)
+    {
+        $total = $entries = Entry::find()
+            ->sectionId($sectionId)
+            ->count();
+        $mappingPath = OneSolr::getInstance()->mappingPath->getMappingBySectionId($sectionId);
+        $data = [
+            'total' => $total,
+            'sectionId' => $sectionId,
+            'mappingPath' => $mappingPath,
+        ];
+        return $this->renderTemplate( 'one-solr/total.json', $data);
     }
 }

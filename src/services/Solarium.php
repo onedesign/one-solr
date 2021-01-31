@@ -10,6 +10,7 @@
 
 namespace onedesign\onesolr\services;
 
+use craft\elements\Entry;
 use onedesign\onesolr\OneSolr;
 
 use Craft;
@@ -30,26 +31,89 @@ use craft\base\Component;
  */
 class Solarium extends Component
 {
+    private $client;
+    private $update;
+
+    public function __construct($config = [])
+    {
+        parent::__construct($config);
+
+        // Get the SOLR client
+        $this->client = OneSolr::getInstance()->solr->getSOLRClient();
+
+        // Create a new update
+        $this->update = $this->client->createUpdate();
+    }
     // Public Methods
     // =========================================================================
 
-    /**
-     * This function can literally be anything you want, and you can have as many service
-     * functions as you want
-     *
-     * From any other plugin file, call it like this:
-     *
-     *     OneSolr::$plugin->solarium->exampleService()
-     *
-     * @return mixed
-     */
-    public function exampleService()
+    public function runIndexSectionSolr($params, $renderedContent)
     {
-        $result = 'something';
-        // Check our Plugin's settings for `someAttribute`
-        if (OneSolr::$plugin->getSettings()->someAttribute) {
+        $jsonContent = json_decode($renderedContent);
+        if (!$jsonContent) {
+            return true;
+        }
+        foreach(['limit', 'sectionId', 'mappingPath'] as $param) {
+            if (!array_key_exists($param, $params) || !$params[$param]) {
+                return false;
+            }
+        }
+        // If it's a full update, delete everything belonging to the current mapping
+        if (array_key_exists('fullUpdate', $params) && $params['fullUpdate'] && $params['offset'] == 0)
+        {
+            $this->clearDocumentsBySection($params['sectionId']);
         }
 
-        return $result;
+        // Create the documents
+        foreach ($jsonContent as $data)
+        {
+            $this->createDocument($data);
+        }
+
+        // Add the commit to the update object
+        $this->update->addCommit();
+
+        // Go go go!
+        $this->client->update($this->update);
+
+        return true;
+    }
+
+    /**
+     * Delete all documents in a section by it's sectionId
+     * Won't execute immediately by default
+     *
+     * @param int sectionId
+     * @param bool execute, default false
+     * @return void
+     */
+    public function clearDocumentsBySection($sectionId, $execute = false)
+    {
+        $sectionIdField = OneSolr::getInstance()->settings->sectionIdField;
+
+        $this->update->addDeleteQuery($sectionIdField . ':' . $sectionId);
+
+        if($execute) {
+            $this->update->addCommit();
+            $this->client->update($this->update);
+        }
+    }
+
+    /**
+     * Loop through the mapping data and build the document
+     *
+     * @return void
+     * @todo integrate recursion for multiple depth levels
+     */
+    private function createDocument($data)
+    {
+        $doc = $this->update->createDocument();
+
+        foreach($data as $key=>$row)
+        {
+            $doc->$key = $row;
+        }
+
+        $this->update->addDocument($doc);
     }
 }

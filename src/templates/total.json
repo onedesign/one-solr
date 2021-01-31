@@ -1,0 +1,5 @@
+{
+  "total":"{{ total }}",
+  "sectionId":"{{ sectionId }}",
+  "mappingPath":"{{ mappingPath }}"
+}

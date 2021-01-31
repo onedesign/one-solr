@@ -117,7 +117,7 @@ class OneSolr extends Plugin
             UrlManager::class,
             UrlManager::EVENT_REGISTER_CP_URL_RULES,
             function (RegisterUrlRulesEvent $event) {
-                $event->rules['cpActionTrigger1'] = 'one-solr/default/do-something';
+                $event->rules['one-solr/total/<sectionId:\d+>'] = 'one-solr/default/total-entries';
             }
         );
 

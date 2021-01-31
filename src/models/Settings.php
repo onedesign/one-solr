@@ -33,6 +33,7 @@ class Settings extends Model
     // =========================================================================
     public $credentials = [];
     public $stepSize = 5;
+    public $sectionIdField;
 
     // Public Methods
     // =========================================================================
