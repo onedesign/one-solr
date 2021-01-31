@@ -22,6 +22,9 @@ use craft\events\PluginEvent;
 use craft\web\UrlManager;
 use craft\web\twig\variables\CraftVariable;
 use craft\events\RegisterUrlRulesEvent;
+use craft\events\ElementEvent;
+use craft\services\Elements;
+use craft\elements\Entry;
 
 use yii\base\Event;
 
@@ -132,16 +135,45 @@ class OneSolr extends Plugin
             }
         );
 
-        // Do something after we're installed
+        // After Entry save, if a mapping path exists with that sectionId:
+        // Add to index if enabled, otherwise remove from index
         Event::on(
-            Plugins::class,
-            Plugins::EVENT_AFTER_INSTALL_PLUGIN,
-            function (PluginEvent $event) {
-                if ($event->plugin === $this) {
-                    // We were just installed
+            Elements::class,
+            Elements::EVENT_AFTER_SAVE_ELEMENT,
+            function(ElementEvent $event) {
+                if ($event->element instanceof Entry) {
+                    $entry = $event->element;
+                    $section = $entry->section;
+                    $mappingPath = OneSolr::getInstance()->mappingPath->getMappingBySectionId($section->id);
+                    if (!$mappingPath) {
+                        return $event;
+                    }
+
+                    if ($entry->enabled) {
+                        OneSolr::getInstance()->solarium->indexEntry($entry, $mappingPath);
+                    } else {
+                        OneSolr::getInstance()->solarium->clearEntryFromSolr($entry->id);
+                    }
                 }
-            }
-        );
+            });
+
+        // Before entry delete, remove from index if it is in a section that has a
+        // mapping path
+        Event::on(
+            Elements::class,
+            Elements::EVENT_BEFORE_DELETE_ELEMENT,
+            function(ElementEvent $event) {
+                if ($event->element instanceof Entry) {
+                    $entry = $event->element;
+                    $section = $entry->section;
+                    $mappingPath = OneSolr::getInstance()->mappingPath->getMappingBySectionId($section->id);
+                    if (!$mappingPath) {
+                        return $event;
+                    }
+
+                    OneSolr::getInstance()->solarium->clearEntryFromSolr($entry->id);
+                }
+            });
 
         $this->setComponents([
             'mappingPath' => \onedesign\onesolr\services\MappingPath::class,

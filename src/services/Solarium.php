@@ -11,10 +11,12 @@
 namespace onedesign\onesolr\services;
 
 use craft\elements\Entry;
+use onedesign\onesolr\models\MappingPathRecord;
 use onedesign\onesolr\OneSolr;
 
 use Craft;
 use craft\base\Component;
+use craft\web\View;
 
 /**
  * Solarium Service
@@ -48,23 +50,28 @@ class Solarium extends Component
     // =========================================================================
 
     /**
-     * Index a section
+     * Index entries to solr
      *
      * @param array $params
      * @param json $renderedContent, a rendered json of content to be indexed
      * @return bool
      */
-    public function runIndexSectionSolr($params, $renderedContent)
+    public function runIndexSolr($params, $renderedContent)
     {
         $jsonContent = json_decode($renderedContent);
         if (!$jsonContent) {
             return true;
         }
-        foreach(['limit', 'sectionId', 'mappingPath'] as $param) {
-            if (!array_key_exists($param, $params) || !$params[$param]) {
-                return false;
+
+        // if entryId is not in params, check that all section params are included
+        if (!array_key_exists('entryId', $params)) {
+            foreach(['limit', 'sectionId', 'mappingPath'] as $param) {
+                if (!array_key_exists($param, $params) || !$params[$param]) {
+                    return false;
+                }
             }
         }
+
         // If it's a full update, delete everything belonging to the current mapping
         if (array_key_exists('fullUpdate', $params) && $params['fullUpdate'] && $params['offset'] == 0)
         {
@@ -104,6 +111,32 @@ class Solarium extends Component
             $this->update->addCommit();
             $this->client->update($this->update);
         }
+    }
+
+    /**
+     * Add index for an entry
+     *
+     * @param Entry $entry
+     * @param string $mappingPath
+     */
+    public function indexEntry(Entry $entry, String $mappingPath) {
+        $params = [
+            'entryId' => $entry->id
+        ];
+        $view = new View();
+        $renderedContent = $view->renderPageTemplate( 'onesolr/' . $mappingPath, $params, 'site');
+        $this->runIndexSolr($params, $renderedContent);
+    }
+
+    /**
+     * Remove entry from Solr
+     *
+     * @param int $entryId
+     */
+    public function clearEntryFromSolr(int $entryId) {
+        $this->update->addDeleteQuery('entry_id_i:' . $entryId);
+        $this->update->addCommit();
+        $this->client->update($this->update);
     }
 
     /**

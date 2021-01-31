@@ -94,7 +94,7 @@ class DefaultController extends Controller
         $params = Craft::$app->getRequest()->post();
         $view = $this->getView();
         $renderedContent = $view->renderPageTemplate( 'onesolr/' . $params['mappingPath'], $params, 'site');
-        $params['status'] = OneSolr::getInstance()->solarium->runIndexSectionSolr($params, $renderedContent);
+        $params['status'] = OneSolr::getInstance()->solarium->runIndexSolr($params, $renderedContent);
         return $this->asJson($params);
     }
 
