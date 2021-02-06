@@ -15,6 +15,7 @@ use Craft;
 use craft\base\Component;
 use onedesign\onesolr\models\MappingPathRecord;
 use phpDocumentor\Reflection\Types\Boolean;
+use yii\base\ErrorException;
 
 /**
  * MappingPath Service
@@ -40,15 +41,19 @@ class MappingPath extends Component
      * @return Array
      */
     public function getMappingTemplates() {
-        $path = CRAFT_BASE_PATH . '/templates/onesolr';
-        $files = scandir($path);
-        foreach ($files as $key=>$file)
-        {
-            $fileParts = pathinfo($file);
-            if($fileParts['extension'] !== 'json')
+        try {
+            $path = CRAFT_BASE_PATH . '/templates/onesolr';
+            $files = scandir($path);
+            foreach ($files as $key=>$file)
             {
-                unset($files[$key]);
+                $fileParts = pathinfo($file);
+                if($fileParts['extension'] !== 'json')
+                {
+                    unset($files[$key]);
+                }
             }
+        } catch (ErrorException $e) {
+            $files = [];
         }
 
         return $files;
