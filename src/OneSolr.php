@@ -103,9 +103,6 @@ class OneSolr extends Plugin
         parent::init();
         self::$plugin = $this;
 
-        //TODO: we shouldn't need this
-        require_once(__DIR__.'/../vendor/autoload.php');
-
         // Register our site routes
         Event::on(
             UrlManager::class,
