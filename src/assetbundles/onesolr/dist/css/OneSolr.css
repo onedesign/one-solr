@@ -49,3 +49,7 @@ tr.progress > td {
     position: relative;
     border: none !important;
 }
+
+#content {
+    max-width: 60rem;
+}
