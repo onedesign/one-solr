@@ -56,9 +56,8 @@ class Solr extends Component
                 'localhost' => $credentials
             ]
         ];
-        $adapter = new Curl();
         $eventDispatcher = new EventDispatcher();
-        return new Client($adapter, $eventDispatcher, $config);
+        return new Client($config, $eventDispatcher);
     }
 
     /**
