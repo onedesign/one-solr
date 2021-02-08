@@ -23,7 +23,7 @@
     ],
     "require": {
         "craftcms/cms": "^3.0.0",
-        "solarium/solarium": "^6.0"
+        "solarium/solarium": "^6.1"
     },
     "require-dev": {
       "craftcms/cms": "^3.2.0",
